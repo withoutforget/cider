@@ -1,6 +1,7 @@
 package config
 
 import (
+	"bytes"
 	"encoding/json"
 	"os"
 
@@ -39,7 +40,13 @@ func readConfigFile(filename string) []byte {
 
 func GetConfig(filename string) *Config {
 	var cfg Config
-	err := toml.Unmarshal(readConfigFile(filename), &cfg)
+
+	reader := bytes.NewReader(readConfigFile(filename))
+	decoder := toml.NewDecoder(reader)
+	decoder = decoder.DisallowUnknownFields()
+
+	err := decoder.Decode(&cfg)
+
 	if err != nil {
 		panic(err.Error())
 	}
