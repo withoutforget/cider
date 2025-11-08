@@ -1,0 +1,13 @@
+[server]
+host="localhost"
+port=8081
+allow_origins=true
+#origins=["*"]
+methods=["*"]
+headers=["*"]
+allow_credentials=true
+allow_wildcard=true
+allow_websockets=true
+[logging]
+human_readable=true
+log_level="debug"
