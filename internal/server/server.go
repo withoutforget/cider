@@ -32,7 +32,7 @@ func NewServer(ctx context.Context, cfg *config.Config) *Server {
 		Addr:    cfg.Server.Host + ":" + strconv.Itoa(cfg.Server.Port),
 		Handler: srv.eng,
 	}
-	srv.api = &api.API{}
+	srv.api = &api.API{Cfg: cfg}
 
 	srv.api.Setup(srv.eng)
 

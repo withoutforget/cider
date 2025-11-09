@@ -25,9 +25,14 @@ type Logging struct {
 	Level         string `toml:"level"`
 }
 
+type Session struct {
+	Timeout int `toml:"timeout"`
+}
+
 type Config struct {
 	Server  *Server  `toml:"server"`
 	Logging *Logging `toml:"logging"`
+	Session *Session `toml:"session"`
 }
 
 func readConfigFile(filename string) []byte {

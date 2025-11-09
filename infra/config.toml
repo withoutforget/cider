@@ -11,3 +11,5 @@ allow_websockets=true
 [logging]
 human_readable=true
 level="debug"
+[session]
+timeout=30 # time in seconds
