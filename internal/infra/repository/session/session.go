@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"log/slog"
 	"time"
 	"withoutforget/cider/internal/config"
 	"withoutforget/cider/internal/provider"
@@ -71,12 +72,15 @@ func (s *SessionRepository) Create(ctx context.Context, model CreateSessionModel
 		ctx,
 		"session_"+token,
 		bytes,
-		time.Duration(s.cfg.Timeout),
+		time.Duration(s.cfg.Timeout)*time.Second,
 	)
 
 	if res.Err() != nil {
 		return "", res.Err()
 	}
+
+	v := s.r.Keys(ctx, "*")
+	slog.Info("got data", "data", v.Val())
 
 	return token, nil
 
@@ -85,7 +89,7 @@ func (s *SessionRepository) Create(ctx context.Context, model CreateSessionModel
 func (s *SessionRepository) Validate(ctx context.Context, token string) (*SessionModel, error) {
 	res := s.r.Get(
 		ctx,
-		token,
+		"session_"+token,
 	)
 
 	if res.Err() != nil {
@@ -101,7 +105,7 @@ func (s *SessionRepository) Validate(ctx context.Context, token string) (*Sessio
 
 	current_time := s.datetime.Now()
 
-	if current_time.Compare(model.ExpiredAt) == -1 {
+	if current_time.Compare(model.ExpiredAt) == 1 {
 		return &model, nil
 	}
 

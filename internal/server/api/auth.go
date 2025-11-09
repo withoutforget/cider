@@ -34,3 +34,24 @@ func (api *API) Auth(c *gin.Context) {
 
 	c.JSON(http.StatusOK, resp)
 }
+
+type ValidateAuthRequest struct {
+	Token string `json:"token"`
+}
+
+func (api *API) ValidateAuth(c *gin.Context) {
+	var request ValidateAuthRequest
+	if err := c.ShouldBind(&request); err != nil {
+		c.JSON(http.StatusBadRequest, InvalidInputResponse)
+		return
+	}
+
+	u := auth.NewAuthUsecase(session.NewSessionRepository(api.Cfg.Session))
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	resp := u.ValidateSession(ctx, auth.ValidateSessionRequest{Token: request.Token})
+
+	c.JSON(http.StatusOK, resp)
+}

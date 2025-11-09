@@ -19,4 +19,5 @@ func NewAPI() *API {
 func (api *API) Setup(eng *gin.Engine) {
 	eng.GET("/api/v1/healthcheck", api.HealthCheck)
 	eng.POST("/api/v1/auth", api.Auth)
+	eng.POST("/api/v1/auth/validate", api.ValidateAuth)
 }
