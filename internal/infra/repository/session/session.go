@@ -4,9 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"log/slog"
 	"time"
 	"withoutforget/cider/internal/config"
+	"withoutforget/cider/internal/infra/dependencies"
 	"withoutforget/cider/internal/provider"
 
 	"github.com/redis/go-redis/v9"
@@ -33,16 +33,12 @@ type SessionRepository struct {
 	cfg      *config.Session
 }
 
-func NewSessionRepository(cfg *config.Session) *SessionRepository {
+func NewSessionRepository(deps *dependencies.Dependencies) *SessionRepository {
 	return &SessionRepository{
-		r: redis.NewClient(&redis.Options{
-			Addr:     "localhost:6379",
-			Password: "",
-			DB:       0,
-		}),
+		r:        deps.Redis,
 		datetime: provider.NewDatetimeProvider(),
 		token:    provider.NewTokenProvider(),
-		cfg:      cfg,
+		cfg:      deps.Config.Session,
 	}
 }
 
@@ -78,9 +74,6 @@ func (s *SessionRepository) Create(ctx context.Context, model CreateSessionModel
 	if res.Err() != nil {
 		return "", res.Err()
 	}
-
-	v := s.r.Keys(ctx, "*")
-	slog.Info("got data", "data", v.Val())
 
 	return token, nil
 

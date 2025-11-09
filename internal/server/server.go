@@ -7,6 +7,7 @@ import (
 	"regexp"
 	"strconv"
 	"withoutforget/cider/internal/config"
+	"withoutforget/cider/internal/infra/dependencies"
 	"withoutforget/cider/internal/server/api"
 
 	"github.com/gin-contrib/cors"
@@ -32,7 +33,10 @@ func NewServer(ctx context.Context, cfg *config.Config) *Server {
 		Addr:    cfg.Server.Host + ":" + strconv.Itoa(cfg.Server.Port),
 		Handler: srv.eng,
 	}
-	srv.api = &api.API{Cfg: cfg}
+
+	deps := dependencies.NewDependencies(srv.cfg)
+
+	srv.api = api.NewAPI(deps)
 
 	srv.api.Setup(srv.eng)
 

@@ -1,19 +1,17 @@
 package api
 
 import (
-	"withoutforget/cider/internal/config"
+	"withoutforget/cider/internal/infra/dependencies"
 
 	"github.com/gin-gonic/gin"
-	"github.com/redis/go-redis/v9"
 )
 
 type API struct {
-	Redis *redis.Client
-	Cfg   *config.Config
+	deps *dependencies.Dependencies
 }
 
-func NewAPI() *API {
-	return &API{Redis: nil}
+func NewAPI(deps *dependencies.Dependencies) *API {
+	return &API{deps: deps}
 }
 
 func (api *API) Setup(eng *gin.Engine) {

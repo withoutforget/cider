@@ -3,7 +3,6 @@ package api
 import (
 	"context"
 	"net/http"
-	"withoutforget/cider/internal/infra/repository/session"
 	"withoutforget/cider/internal/usecase/auth"
 
 	"github.com/gin-gonic/gin"
@@ -22,7 +21,7 @@ func (api *API) Auth(c *gin.Context) {
 
 	device := c.GetHeader("User-Agent")
 
-	u := auth.NewAuthUsecase(session.NewSessionRepository(api.Cfg.Session))
+	u := auth.NewAuthUsecase(api.deps)
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -45,8 +44,7 @@ func (api *API) ValidateAuth(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, InvalidInputResponse)
 		return
 	}
-
-	u := auth.NewAuthUsecase(session.NewSessionRepository(api.Cfg.Session))
+	u := auth.NewAuthUsecase(api.deps)
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
