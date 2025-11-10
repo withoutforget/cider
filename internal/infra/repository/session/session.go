@@ -104,3 +104,16 @@ func (s *SessionRepository) Validate(ctx context.Context, token string) (*Sessio
 
 	return nil, errors.New("session expired")
 }
+
+func (s *SessionRepository) Revoke(ctx context.Context, token string) error {
+	res := s.r.Del(
+		ctx,
+		"session_"+token,
+	)
+
+	if res.Err() != nil {
+		return res.Err()
+	}
+
+	return nil
+}

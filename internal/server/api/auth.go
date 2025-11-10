@@ -85,3 +85,31 @@ func (api *API) Register(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, resp)
 }
+
+type RevokeRequest struct {
+	Token string `json:"token"`
+}
+
+func (api *API) Revoke(c *gin.Context) {
+	var request RevokeRequest
+	if err := c.ShouldBind(&request); err != nil {
+		c.JSON(http.StatusBadRequest, InvalidInputResponse)
+		return
+	}
+
+	u := auth.NewAuthUsecase(api.deps)
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	resp := u.RevokeSession(ctx, auth.RevokeSessionRequest{
+		Token: request.Token,
+	})
+
+	if resp.Error != nil {
+		c.JSON(http.StatusBadRequest, resp)
+		return
+	}
+
+	c.JSON(http.StatusOK, resp)
+}

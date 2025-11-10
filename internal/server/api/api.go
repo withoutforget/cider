@@ -19,4 +19,5 @@ func (api *API) Setup(eng *gin.Engine) {
 	eng.POST("/api/v1/auth", api.Auth)
 	eng.POST("/api/v1/auth/validate", api.ValidateAuth)
 	eng.POST("/api/v1/auth/register", api.Register)
+	eng.POST("/api/v1/auth/revoke", api.Revoke)
 }

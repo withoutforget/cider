@@ -26,3 +26,8 @@ class SessionModel:
 class ValidateSessionResponse:
     session: Optional[SessionModel] = None
     error: Optional[str] = None
+
+
+@dataclass(slots=True)
+class RevokeSessionResponse:
+    error: Optional[str] = None

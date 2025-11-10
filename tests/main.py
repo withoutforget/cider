@@ -49,6 +49,26 @@ def auth_test():
     
     logger.info("success validate: user_id - \"%s\"", res.session.user_id)
 
+    res = api.revoke(
+        token = token,
+    )
+
+    if res.error is not None:
+        logger.critical("Got error: %s", res.error)
+        return
+    
+    logger.info("success revoke: token - \"%s\"", token)
+
+    res = api.validate(
+        token=token,
+    )
+
+    if res.error is None:
+        logger.critical("Revoke failed: %s", res)
+        return
+    
+    logger.info("success revoke: error - \"%s\"", res.error)
+
 
 def main():
     logger.info("="*70)

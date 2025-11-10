@@ -1,6 +1,6 @@
 import requests
 from typing import Optional
-from api_types import RegisterUserResponse, CreateSessionResponse, ValidateSessionResponse
+from api_types import RegisterUserResponse, CreateSessionResponse, RevokeSessionResponse, ValidateSessionResponse
 from adaptix import Retort
 
 class CiderAPI:
@@ -28,8 +28,6 @@ class CiderAPI:
     def login(self, username: str, password: str) -> CreateSessionResponse:
         data = self._post('/auth/', {'username': username, 'password': password})
         resp = self.retort.load(data, CreateSessionResponse)
-        assert not resp.error, f"Login error: {resp.error}"
-        assert resp.token, "No token in response"
         self.token = resp.token
         return resp
     
@@ -38,5 +36,11 @@ class CiderAPI:
         assert token, "No token to validate"
         data = self._post('/auth/validate/', {'token': token})
         resp =  self.retort.load(data, ValidateSessionResponse)
-        assert not resp.error, f"Validation error: {resp.error}"
+        return resp
+    
+    def revoke(self, token: str = None) -> RevokeSessionResponse:
+        token = token or self.token
+        assert token, "No token to validate"
+        data = self._post('/auth/revoke/', {'token': token})
+        resp =  self.retort.load(data, RevokeSessionResponse)
         return resp
