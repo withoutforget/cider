@@ -6,8 +6,23 @@ API_URL = 'http://localhost:8081'
 
 def session_test():
     data = requests.post(
+        API_URL + "/api/v1/auth/register",
+        json = { "username": "admin",
+                "password": "12345678" },
+    )
+
+    if data.status_code != 201:
+        logging.error("Status code error %s", data.text)
+        return
+    
+    data:dict = json.loads(data.text)
+    logging.info("Got response %s", str(data))
+
+
+    data = requests.post(
         API_URL + "/api/v1/auth/",
-        json = { "username": "admin" },
+        json = { "username": "admin",
+                "password": "12345678" },
     )
 
     if data.status_code != 200:
@@ -38,7 +53,7 @@ def session_test():
     if "error" in data.keys():
         logging.critical("Got error %s", str(data["error"]))
         return
-
+    
 def main():
     logging.basicConfig(level=logging.DEBUG)
 

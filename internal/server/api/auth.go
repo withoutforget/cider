@@ -10,6 +10,7 @@ import (
 
 type AuthRequest struct {
 	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
 func (api *API) Auth(c *gin.Context) {
@@ -28,6 +29,7 @@ func (api *API) Auth(c *gin.Context) {
 
 	resp := u.CreateSession(ctx, auth.CreateSessionRequest{
 		Username: request.Username,
+		Password: request.Password,
 		Device:   device,
 	})
 
@@ -52,4 +54,34 @@ func (api *API) ValidateAuth(c *gin.Context) {
 	resp := u.ValidateSession(ctx, auth.ValidateSessionRequest{Token: request.Token})
 
 	c.JSON(http.StatusOK, resp)
+}
+
+type RegisterRequest struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}
+
+func (api *API) Register(c *gin.Context) {
+	var request RegisterRequest
+	if err := c.ShouldBind(&request); err != nil {
+		c.JSON(http.StatusBadRequest, InvalidInputResponse)
+		return
+	}
+
+	u := auth.NewAuthUsecase(api.deps)
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	resp := u.RegisterUser(ctx, auth.RegisterUserRequest{
+		Username: request.Username,
+		Password: request.Password,
+	})
+
+	if resp.Error != nil {
+		c.JSON(http.StatusBadRequest, resp)
+		return
+	}
+
+	c.JSON(http.StatusCreated, resp)
 }

@@ -6,14 +6,14 @@ import (
 	"errors"
 	"time"
 	"withoutforget/cider/internal/config"
-	"withoutforget/cider/internal/infra/dependencies"
+	"withoutforget/cider/internal/dependencies"
 	"withoutforget/cider/internal/provider"
 
 	"github.com/redis/go-redis/v9"
 )
 
 type SessionModel struct {
-	UserID    uint64    `json:"user_id"`
+	UserID    int64     `json:"user_id"`
 	Username  string    `json:"username"`
 	CreatedAt time.Time `json:"created_at"`
 	ExpiredAt time.Time `json:"expired_at"`
@@ -21,7 +21,7 @@ type SessionModel struct {
 }
 
 type CreateSessionModel struct {
-	UserID   uint64 `json:"user_id"`
+	UserID   int64  `json:"user_id"`
 	Username string `json:"username"`
 	Device   string `json:"device"`
 }

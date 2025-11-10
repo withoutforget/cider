@@ -3,6 +3,7 @@ package config
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"os"
 
 	"github.com/pelletier/go-toml/v2"
@@ -20,6 +21,20 @@ type Server struct {
 	AllowWebSockets  bool     `toml:"allow_websockets"`
 }
 
+type Postgres struct {
+	Host     string `toml:"host"`
+	Port     int    `toml:"port"`
+	Username string `toml:"username"`
+	Password string `toml:"password"`
+	Database string `toml:"database"`
+	Driver   string `toml:"driver"`
+}
+
+func (p *Postgres) Dsn() string {
+	url := "host=%v port=%v dbname=%v user=%v password=%v sslmode=disable"
+	return fmt.Sprintf(url, p.Host, p.Port, p.Database, p.Username, p.Password)
+}
+
 type Logging struct {
 	HumanReadable bool   `toml:"human_readable"`
 	Level         string `toml:"level"`
@@ -30,9 +45,10 @@ type Session struct {
 }
 
 type Config struct {
-	Server  *Server  `toml:"server"`
-	Logging *Logging `toml:"logging"`
-	Session *Session `toml:"session"`
+	Server   *Server   `toml:"server"`
+	Postgres *Postgres `toml:"postgres"`
+	Logging  *Logging  `toml:"logging"`
+	Session  *Session  `toml:"session"`
 }
 
 func readConfigFile(filename string) []byte {

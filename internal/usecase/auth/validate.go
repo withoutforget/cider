@@ -15,7 +15,7 @@ type ValidateSessionResponse struct {
 }
 
 func (u *AuthUsecase) ValidateSession(ctx context.Context, r ValidateSessionRequest) ValidateSessionResponse {
-	res, err := u.session_repository.Validate(ctx, r.Token)
+	res, err := u.sessionRepository.Validate(ctx, r.Token)
 	if err != nil {
 		err_v := err.Error()
 		return ValidateSessionResponse{Session: nil, Error: &err_v}

@@ -13,3 +13,10 @@ human_readable=true
 level="debug"
 [session]
 timeout=30 # time in seconds
+[postgres]
+host="localhost"
+port=5432
+username="postgres"
+password="postgres"
+database="postgres"
+driver="pgx"

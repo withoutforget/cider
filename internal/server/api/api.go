@@ -1,7 +1,7 @@
 package api
 
 import (
-	"withoutforget/cider/internal/infra/dependencies"
+	"withoutforget/cider/internal/dependencies"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,4 +18,5 @@ func (api *API) Setup(eng *gin.Engine) {
 	eng.GET("/api/v1/healthcheck", api.HealthCheck)
 	eng.POST("/api/v1/auth", api.Auth)
 	eng.POST("/api/v1/auth/validate", api.ValidateAuth)
+	eng.POST("/api/v1/auth/register", api.Register)
 }

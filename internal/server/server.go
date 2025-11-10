@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"strconv"
 	"withoutforget/cider/internal/config"
-	"withoutforget/cider/internal/infra/dependencies"
+	"withoutforget/cider/internal/dependencies"
 	"withoutforget/cider/internal/server/api"
 
 	"github.com/gin-contrib/cors"

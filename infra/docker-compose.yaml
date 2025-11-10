@@ -6,6 +6,24 @@ services:
       - "6379:6379"
     volumes:
       - REDIS_DATA:/data
+    networks:
+      - cider_network
+  postgres:
+    image: postgres:17
+    restart: unless-stopped
+    env_file:
+      - ../.env
+    volumes:
+      - POSTGRES_DATA:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - cider_network
 
 volumes:
   REDIS_DATA:
+  POSTGRES_DATA:
+networks:
+  cider_network:
+    driver: bridge
+    external: true
