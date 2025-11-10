@@ -1,4 +1,3 @@
-"""Cider API Types"""
 from dataclasses import dataclass
 from typing import Optional
 

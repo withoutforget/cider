@@ -1,4 +1,3 @@
-"""Cider API Client"""
 import requests
 from typing import Optional
 from api_types import RegisterUserResponse, CreateSessionResponse, ValidateSessionResponse

@@ -1,4 +1,3 @@
-"""Cider API Tests"""
 import logging
 from client import CiderAPI
 
