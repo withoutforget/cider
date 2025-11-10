@@ -1,63 +1,67 @@
-import json
+"""Cider API Tests"""
 import logging
-import requests
+from client import CiderAPI
 
-API_URL = 'http://localhost:8081'
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 
-def session_test():
-    data = requests.post(
-        API_URL + "/api/v1/auth/register",
-        json = { "username": "admin",
-                "password": "12345678" },
+logger = logging.getLogger(__name__)
+
+
+def auth_test():
+    api = CiderAPI()
+
+    USERNAME = 'admin'
+    PASSWORD = '12345678'
+
+
+    res = api.register(
+        username=USERNAME,
+        password=PASSWORD,
     )
 
-    if data.status_code != 201:
-        logging.error("Status code error %s", data.text)
+    if res.error is not None:
+        logger.critical("Got error: %s", res.error)
         return
     
-    data:dict = json.loads(data.text)
-    logging.info("Got response %s", str(data))
+    logger.info("success register: ID - \"%s\"", res.user_id)
 
-
-    data = requests.post(
-        API_URL + "/api/v1/auth/",
-        json = { "username": "admin",
-                "password": "12345678" },
+    res = api.login(
+        username=USERNAME,
+        password=PASSWORD,
     )
 
-    if data.status_code != 200:
-        logging.error("Status code error %s", data.text)
+    if res.error is not None:
+        logger.critical("Got error: %s", res.error)
         return
-    
-    data:dict = json.loads(data.text)
-    logging.info("Got response %s", str(data))
-    
-    if "error" in data.keys():
-        logging.critical("Got error %s", data["error"])
-        return
+    logger.info("success auth: token - \"%s\"", res.token)
 
-    token: str = data["token"]
+    token = res.token
 
-    data = requests.post(
-        API_URL + "/api/v1/auth/validate/",
-        json = { "token": token },
+    res = api.validate(
+        token=token,
     )
 
-    if data.status_code != 200:
-        logging.critical("Status code error %s", data.text)
+    if res.error is not None:
+        logger.critical("Got error: %s", res.error)
         return
     
-    data:dict = json.loads(data.text)
-    logging.info("Got response %s", str(data))
-    
-    if "error" in data.keys():
-        logging.critical("Got error %s", str(data["error"]))
-        return
-    
+    logger.info("success validate: user_id - \"%s\"", res.session.user_id)
+
+
 def main():
-    logging.basicConfig(level=logging.DEBUG)
+    logger.info("="*70)
+    logger.info("Starting Cider API Test")
+    logger.info("="*70)
+    
+    auth_test()
+    
+    logger.info("="*70)
+    logger.info("Test completed")
+    logger.info("="*70)
 
-    session_test()
 
 if __name__ == '__main__':
     main()

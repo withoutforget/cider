@@ -3,6 +3,15 @@ revision = 2
 requires-python = ">=3.13"
 
 [[package]]
+name = "adaptix"
+version = "3.0.0b11"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/58/ea/f55d4de521cb237b1dd9c4a21c6ae3885d21b4f90130d15fd88020d6d1ca/adaptix-3.0.0b11.tar.gz", hash = "sha256:3d3d660d97d9e1a85d133b181fdac8a200ff3185422fdf686601bc9ed0017162", size = 134021, upload-time = "2025-05-09T14:51:09.977Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/76/70/b087e09db584c2718cfff4a354c98dfac1844e7e7d0c75dc38685823eec1/adaptix-3.0.0b11-py3-none-any.whl", hash = "sha256:5afa7197d1a084fc93da852bf58194de4a1c506caa3f5889c9953a27ce515bda", size = 179291, upload-time = "2025-05-09T14:51:08.288Z" },
+]
+
+[[package]]
 name = "certifi"
 version = "2025.10.5"
 source = { registry = "https://pypi.org/simple" }
@@ -142,12 +151,14 @@ name = "tests"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "adaptix" },
     { name = "pytest" },
     { name = "requests" },
 ]
 
 [package.metadata]
 requires-dist = [
+    { name = "adaptix", specifier = ">=3.0.0b11" },
     { name = "pytest", specifier = ">=9.0.0" },
     { name = "requests", specifier = ">=2.32.5" },
 ]
