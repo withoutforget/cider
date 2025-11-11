@@ -96,13 +96,7 @@ func (s *SessionRepository) Validate(ctx context.Context, token string) (*Sessio
 		return nil, err
 	}
 
-	current_time := s.datetime.Now()
-
-	if current_time.Compare(model.ExpiredAt) == 1 {
-		return &model, nil
-	}
-
-	return nil, errors.New("session expired")
+	return &model, nil
 }
 
 func (s *SessionRepository) Revoke(ctx context.Context, token string) error {

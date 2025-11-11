@@ -7,6 +7,8 @@ DATABASE_URL := env('DATABASE_URL')
 @lines:
     cloc -vcs=git .
 
+tests:
+    cd ./tests/ && uv run main.py
 [doc("Apply all migrations")]
 migrate-up:
     migrate -database {{DATABASE_URL}} -path ./migrations up

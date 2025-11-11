@@ -24,7 +24,7 @@ func (api *API) Auth(c *gin.Context) {
 
 	u := auth.NewAuthUsecase(api.deps)
 
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(c.Request.Context())
 	defer cancel()
 
 	resp := u.CreateSession(ctx, auth.CreateSessionRequest{
@@ -48,7 +48,7 @@ func (api *API) ValidateAuth(c *gin.Context) {
 	}
 	u := auth.NewAuthUsecase(api.deps)
 
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(c.Request.Context())
 	defer cancel()
 
 	resp := u.ValidateSession(ctx, auth.ValidateSessionRequest{Token: request.Token})
@@ -70,7 +70,7 @@ func (api *API) Register(c *gin.Context) {
 
 	u := auth.NewAuthUsecase(api.deps)
 
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(c.Request.Context())
 	defer cancel()
 
 	resp := u.RegisterUser(ctx, auth.RegisterUserRequest{
@@ -99,7 +99,7 @@ func (api *API) Revoke(c *gin.Context) {
 
 	u := auth.NewAuthUsecase(api.deps)
 
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(c.Request.Context())
 	defer cancel()
 
 	resp := u.RevokeSession(ctx, auth.RevokeSessionRequest{

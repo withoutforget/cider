@@ -2,7 +2,6 @@ package auth
 
 import (
 	"context"
-	"errors"
 	"withoutforget/cider/internal/infra/repository/session"
 )
 
@@ -19,28 +18,24 @@ type CreateSessionResponse struct {
 func (u *AuthUsecase) CreateSession(ctx context.Context, r CreateSessionRequest) CreateSessionResponse {
 	var token string
 
-	err := u.txManager.WithTransaction(ctx, func(txCtx context.Context) error {
-		user, err := u.userRepository.GetUserByUsername(txCtx, r.Username)
-		if err != nil {
-			return errors.New("invalid credentials (username)")
-		}
-		if !u.hasher.IsPasswordValid(user.PasswordHash, r.Password) {
-			return errors.New("invalid credentials (password)")
-		}
+	user, err := u.userRepository.GetUserByUsername(ctx, r.Username)
+	if err != nil {
+		err_v := "invalid credentials (username)"
+		return CreateSessionResponse{Token: nil, Error: &err_v}
+	}
+	if !u.hasher.IsPasswordValid(user.PasswordHash, r.Password) {
+		err_v := "invalid credentials (password)"
+		return CreateSessionResponse{Token: nil, Error: &err_v}
+	}
 
-		res, err := u.sessionRepository.Create(txCtx,
-			session.CreateSessionModel{
-				UserID:   user.ID,
-				Username: r.Username,
-				Device:   r.Device,
-			})
-		if err != nil {
-			return err
-		}
+	res, err := u.sessionRepository.Create(ctx,
+		session.CreateSessionModel{
+			UserID:   user.ID,
+			Username: r.Username,
+			Device:   r.Device,
+		})
 
-		token = res
-		return nil
-	})
+	token = res
 
 	if err != nil {
 		err_v := err.Error()

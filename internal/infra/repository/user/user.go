@@ -20,17 +20,20 @@ type CreateUserModel struct {
 }
 
 type UserRepository struct {
+	postgres *sql.DB
 }
 
 func NewUserRepository(deps *dependencies.Dependencies) *UserRepository {
-	return &UserRepository{}
+	return &UserRepository{
+		postgres: deps.Postgres,
+	}
 }
 
-func (r *UserRepository) getTx(ctx context.Context) (*sql.Tx, error) {
+func (r *UserRepository) getTx(ctx context.Context) (txmanager.ITx, error) {
 	if tx, ok := ctx.Value(txmanager.TxKey).(*sql.Tx); ok {
 		return tx, nil
 	}
-	return nil, errors.New("you are not into transaction")
+	return r.postgres, nil
 }
 
 func (r *UserRepository) CreateUser(ctx context.Context, model CreateUserModel) (*UserModel, error) {
